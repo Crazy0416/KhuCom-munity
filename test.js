@@ -10,7 +10,7 @@ var options = {
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body:"user_id=2013104056&password=KIMho0715!@&RequestData="
+    body:"user_id=2013104056&password=KIMho0715@#&RequestData="
 };
 
 
@@ -47,16 +47,15 @@ function getCookieConsole(){
 
 req.on('response', function(res) {
     res.setEncoding('utf8');
-
     res.on('end', function () {
         setCookie(res.headers["set-cookie"]);
-        console.log(res.headers);
+        console.log("cookie1 : "+ getCookie());
         options = {
             url: 'https://khuis.khu.ac.kr/java/servlet/controllerCosy?' +
             'action=17&WID=hsip1004&Pkg=JSP&URL=' +
             'JSP./jsp/hssu/infospace/SugangSearchPrintList.jsp[(QUES)]auto=off',
             port: 80,
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Cookie' : getCookie()
@@ -67,7 +66,7 @@ req.on('response', function(res) {
         req2.on('response', function (res) {
             res.setEncoding('utf8');
             res.on('end',function () {
-                console.log(res.headers);
+                console.log("cookie2 : " + JSON.stringify(res.headers));
                 setCookie(res.headers["set-cookie"]);
 
                 options = {
@@ -94,9 +93,9 @@ req.on('response', function(res) {
                     res.on('end', function () {
 
                         setCookie(res.headers["set-cookie"]);
-                        console.log(res.headers);
-                        console.log(output);
-                        console.log("cookie : ");
+                        console.log("cookie3first : " + JSON.stringify(res.headers));
+                        console.log("output : " + output);
+                        console.log("cookie3 : ");
                         getCookieConsole();
                     });
 
