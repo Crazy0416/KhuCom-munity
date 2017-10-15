@@ -9,8 +9,8 @@ router.use(function(req, res, next){
 })
 
 /* GET home page. */
-router.get('/test', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function(req, res, next) {
+  res.render('index');
 });
 
 router.get('/base', function(req, res, next) {
