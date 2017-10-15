@@ -1,10 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var moment = require('moment');
+
+// show server time
+router.use(function(req, res, next){
+    console.log(moment().format());
+    next();
+})
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/test', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/', function(req, res, next){
+    res.render('homepage');
+})
 
 module.exports = router;

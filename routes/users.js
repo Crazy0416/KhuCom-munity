@@ -3,6 +3,13 @@ var router = express.Router();
 var request = require('request');
 var Iconv = require('iconv').Iconv;
 var iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE');
+var moment = require('moment');
+
+// show server time
+router.use(function(req, res, next){
+    console.log(moment().format());
+    next();
+})
 
 // 임시 로그인 정보
 var tmpLoginJson = require('../config/tmpLoginJson.json');
@@ -14,6 +21,9 @@ router.get('/', function(req, res, next) {
 
 router.post('/login', function(req, res){
     var cookie = {};
+    var id = req.body.id;
+    var password = req.body.password;
+    var LoginData = "user_id="+ id +"&password="+ password + "&RequestData=";
     var options = {
         url: 'https://khuis.khu.ac.kr/java/servlet/khu.cosy.login.loginCheckAction',
         port: 80,
@@ -21,14 +31,10 @@ router.post('/login', function(req, res){
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: tmpLoginJson                                              // 아이디 비밀번호 넣으면 됌
+        body: LoginData
     };
-  /*
-  // 나중에 쓸 로그인 변수
-  var id = req.body.id;
-  var password = req.body.password;
-  */
-  console.log(JSON.stringify(tmpLoginJson));
+
+  console.log("id password" + id + " " + password);
   var reqKHU = request(options);
   reqKHU.on('response', function (res1) {
       res1.on('end', function () {
@@ -63,9 +69,13 @@ router.post('/login', function(req, res){
                   var nameIndex = output.indexOf('사용자 : ');
                   var name = output.substr(nameIndex+6, 4);
                   var StudentID = findStudentIdCookie(cookie);
+                  if(!StudentID)
+                      res.send("로그인 오류");
+                  else
+                      res.send("사용자 : " + name + "\n학번 : "+ StudentID);
                   console.log("사용자는? " + name);
                   console.log("학번 : " + StudentID);
-                  res.send(output);
+
               })
           })
 
