@@ -11,8 +11,6 @@ router.use(function(req, res, next){
     next();
 })
 
-// 임시 로그인 정보
-var tmpLoginJson = require('../config/tmpLoginJson.json');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
