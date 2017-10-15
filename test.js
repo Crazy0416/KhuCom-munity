@@ -29,6 +29,7 @@ function setCookie(cookies) {
         }
     }
 }
+
 function getCookie() {
     var str = "";
     for (var i in cookie) {
@@ -98,7 +99,6 @@ req.on('response', function(res) {
                         console.log("cookie3 : ");
                         getCookieConsole();
                     });
-
 
                 });
 
