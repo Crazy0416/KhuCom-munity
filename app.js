@@ -10,6 +10,8 @@ var engine = require('ejs-locals');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var notice = require('./routes/notice');
+var club = require('./routes/club');
+var board = require('./routes/board');
 
 var app = express();
 
@@ -31,6 +33,8 @@ app.engine('ejs', engine);
 app.use('/', index);
 app.use('/users', users);
 app.use('/notice', notice);
+app.use('/club', club);
+app.use('/board', board);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
