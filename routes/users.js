@@ -1,5 +1,4 @@
 var express = require('express');
-var app = express();
 var router = express.Router();
 var request = require('request');
 var Iconv = require('iconv').Iconv;
@@ -12,10 +11,7 @@ var hasher = bkfd2Password();
 
 // config file
 var mysql_config = require('../config/db_config.json');
-var session_config = require('../config/session_config.json');
 
-
-app.use(session(session_config));
 
 // mysql config tab
 mysql.configure(mysql_config);
@@ -172,8 +168,41 @@ router.post('/register', function(req,res, next){
 })
 
 
-router.post('/login', function(req, res){
+router.post('/login', function(req, res, next){
     // TODO: 로그인 후 세션 생성, 로그인 후 홈페이지 작동 방식 구상(ajax? 정적 웹사이트?)
+    var id = req.body.id + "";
+    var password = req.body.password;
+    console.log("p? : " + password);
+    mysql.query('SELECT * FROM Member WHERE mem_userid=?', id)
+        .then(function(rows){
+            console.log(rows[0][0]);
+            console.log("mem_p : "+rows[0][0]['mem_password']);
+            hasher({password:password, salt:rows[0][0]['mem_pwsalt']}, function(err, pass, salt, hash){
+                console.log('db password : ' + rows[0][0]['mem_password']);
+                console.log('password : ' + hash);
+                if(hash === rows[0][0]['mem_password'] && !(req.session.id)){
+                    // session 설정
+                    req.session.id = id;
+                    req.session.username = rows[0][0]['mem_username'];
+                    req.session.nickname = rows[0][0]['mem_nickname'];
+                    req.session.level = rows[0][0]['mem_level'];
+                    req.session.email = rows[0][0]['mem_email'];
+
+                    console.log(req.session);
+                    res.send("ok!");
+                }
+                else if(req.session.id){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
+                    res.send("not ok!");
+                    console.log(req.session);
+                }
+                else{   // TODO: 비밀번호 틀렸을 경우 작동 방식 구상
+                    res.send("not not ok!");
+                }
+            })
+        })
+        .catch(function(err){   // TODO: 오류 처리
+
+        })
 });
 
 
