@@ -22,6 +22,7 @@ router.use(function(req, res, next){
     next();
 })
 
+
 function setCookie(cookies, cookie) {
     for (var i in cookies) {
         var c = cookies[i];
@@ -124,7 +125,6 @@ var checkKhuMember = function(r_id, r_password, callback){
         Router 모듈
  */
 
-
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -167,6 +167,9 @@ router.post('/register', function(req,res, next){
     });
 })
 
+router.get('/login', function(req, res, next) {
+    res.render('login');
+});
 
 router.post('/login', function(req, res, next){
     // TODO: 로그인 후 세션 생성, 로그인 후 홈페이지 작동 방식 구상(ajax? 정적 웹사이트?)
