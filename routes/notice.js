@@ -6,7 +6,7 @@ var moment = require('moment');
 router.use(function(req, res, next){
     console.log(moment().format());
     next();
-})
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
