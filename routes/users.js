@@ -5,6 +5,7 @@ var Iconv = require('iconv').Iconv;
 var iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE');
 var moment = require('moment');
 var session = require('express-session');
+var cheerio = require('cheerio');
 var mysql = require('mysql-promise')();
 var bkfd2Password = require('pbkdf2-password');         // Member password 암호화 모듈
 var hasher = bkfd2Password();
@@ -71,7 +72,7 @@ var checkKhuMember = function(r_id, r_password, callback){
     reqKHU.on('response', function (res1) {
         res1.on('end', function () {
             setCookie(res1.headers["set-cookie"], cookie);
-            console.log("cookie : " + res1.headers["set-cookie"]);
+            //console.log("cookie : " + res1.headers["set-cookie"]);
 
             var options = {
                 url: 'https://khuis.khu.ac.kr/java/servlet/controllerCosy?' +
@@ -98,8 +99,10 @@ var checkKhuMember = function(r_id, r_password, callback){
                 })
 
                 res2.on('end',function(){
-                    var nameIndex = output.indexOf('사용자 : ');
-                    var name = output.substr(nameIndex+6, 4);
+                    //console.log(output);
+                    var $ = cheerio.load(output);
+                    var Mem_name = $('#GNB-student').first().text().split('님')[0].split(':')[1].substr(1);
+                    var Mem_Company = $('#GNB-student').find('p').eq(1).text().split(':')[1].substr(1);
                     var StudentID = findStudentIdCookie(cookie);
                     if(!StudentID)
                         callback({
@@ -111,7 +114,8 @@ var checkKhuMember = function(r_id, r_password, callback){
                             'SUCCESS': 1,
                             'DATA': {
                                 'id':StudentID,
-                                'name':name
+                                'name':Mem_name,
+                                'company': Mem_Company
                             }
                         });
                 })
@@ -142,10 +146,13 @@ router.post('/register', function(req,res, next){
             var userId = resJson.DATA.id;
             var userName = resJson.DATA.name;
             var userNickname = req.body.nickname;
-            var userLevel = req.body.level;
+            var userLevel;
             var userEmail = req.body.email;
             var registerTime = moment().format('YYYY/MM/DD HH:mm:ss');
-
+            if(resJson.DATA.company === '전자정보대학 컴퓨터공학과')
+                userLevel = 3;
+            else
+                userLevel = 2;
             // Password Encrytion 패스워드 암호화, pbkdf2-password 모듈
             hasher({password: req.body.password}, function(err, pass, salt, hash) {
 
@@ -182,10 +189,12 @@ router.post('/login', function(req, res, next){
             console.log("mem_p : "+rows[0][0]['mem_password']);
             hasher({password:password, salt:rows[0][0]['mem_pwsalt']}, function(err, pass, salt, hash){
                 console.log('db password : ' + rows[0][0]['mem_password']);
-                console.log('password : ' + hash);
-                if(hash === rows[0][0]['mem_password'] && !(req.session.id)){
+                console.log('hash : ' + hash);
+                console.log('password: '+ pass);
+                console.log("session id : " + req.session.Id);
+                if(hash === rows[0][0]['mem_password'] && (typeof req.session.Id == "undefined")){
                     // session 설정
-                    req.session.id = id;
+                    req.session.Id = id;
                     req.session.username = rows[0][0]['mem_username'];
                     req.session.nickname = rows[0][0]['mem_nickname'];
                     req.session.level = rows[0][0]['mem_level'];
@@ -194,7 +203,7 @@ router.post('/login', function(req, res, next){
                     console.log(req.session);
                     res.send("ok!");
                 }
-                else if(req.session.id){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
+                else if(req.session.id !== undefined){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
                     res.send("not ok!");
                     console.log(req.session);
                 }
