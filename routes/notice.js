@@ -35,8 +35,7 @@ router.get('/stu/:page_num', function(req, res, next) {
                   "post_nickname" : ele.post_nickname,
                   "post_username" : ele.post_username,
                   "post_hit" : ele.post_hit,
-                  "post_comment_count" : ele.post_comment_count,
-
+                  "post_comment_count" : ele.post_comment_count
               };
               data.data['d'+index] = post;
           })
