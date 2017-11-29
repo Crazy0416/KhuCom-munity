@@ -17,5 +17,9 @@ router.get('/stu', function(req, res, next) {
   res.render('stu-notice');
 });
 
+router.get('/stu/write', function(req, res, next) {
+  res.render('stu-notice_write');
+});
+
 
 module.exports = router;
