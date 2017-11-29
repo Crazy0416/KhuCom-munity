@@ -14,6 +14,17 @@ router.get('/', function(req, res, next) {
   res.render('notice');
 });
 
+router.get('/stu/:brd_id/:post_num', function(req, res, next){
+    var brd_id = req.params.brd_id;
+    var post_num =req.params.post_num;
+
+    mysql.query('SELECT * FROM Post WHERE Board_brd_id=?, post_num=?'[brd_id, post_num])
+        .spread(function(rows){
+
+        })
+})
+
+/* GET stu-notice nth page */
 router.get('/stu/:page_num', function(req, res, next) {
   var brdPostCnt;          // 보드 post의 총 개수
   var page_cnt;         // 페이지 총 개수
@@ -44,6 +55,9 @@ router.get('/stu/:page_num', function(req, res, next) {
           data.page_cnt = page_cnt;
           data.page_num = page_num;
           res.render('stu-notice', data);
+      })
+      .catch(function(err){
+          res.render("err", {message :"DB_ERR"});
       })
 });
 
