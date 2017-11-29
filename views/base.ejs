@@ -92,20 +92,25 @@
 						<!-- Begin user session nav -->
 						<ul class="nav-user navbar-right">
 							<li class="dropdown">
+								<!-- KHU : 세션 있으면 이거 -->
 							  <a href="#fakelink" class="dropdown-toggle" data-toggle="dropdown">
 								<img src="/img/avatar/avatar.jpg" class="avatar img-circle" alt="Avatar">
 								  <strong>[사용자 이름]</strong>
 							  </a>
-							  <ul class="dropdown-menu square primary margin-list-rounded with-triangle">
-								<li><a href="#fakelink">Account setting</a></li>
-								<li><a href="#fakelink">Payment setting</a></li>
+								<ul class="dropdown-menu square primary margin-list-rounded with-triangle">
 								<li><a href="#fakelink">Change password</a></li>
 								<li><a href="#fakelink">My public profile</a></li>
 								<li class="divider"></li>
 								<li><a href="lock-screen.html">Lock screen</a></li>
 								<li><a href="login.html">Log out</a></li>
 							  </ul>
+								<!-- KHU END : 세션 있으면 이거 -->
+								<!-- KHU : 로그인 안하면 이거 -->
+								<button class="btn btn-default" onclick="location.href='/users/login'">로그인</button>
+								<button class="btn btn-default" onclick="location.href='/users/register'">회원가입</button>
+								<!-- KHU END : 로그인 안하면 이거 -->
 							</li>
+
 						</ul>
 						<!-- End user session nav -->
 

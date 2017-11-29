@@ -134,6 +134,11 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+/* GET users listing. */
+router.get('/register', function(req, res, next) {
+  res.render('register');
+});
+
 /* POST Member data, Register Member */
 router.post('/register', function(req,res, next){
     checkKhuMember(req.body.id, req.body.khuis_password, function(json){
