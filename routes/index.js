@@ -10,7 +10,13 @@ router.use(function(req, res, next){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  var sendData = {}
+  if(req.session.nickname)
+      sendData.mem_username = req.session.nickname;
+  else
+      sendData.mem_username = "[로그인 필요]";
+
+  res.render('index', sendData);
 });
 
 router.get('/base', function(req, res, next) {

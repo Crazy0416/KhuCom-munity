@@ -136,7 +136,16 @@ router.get('/', function(req, res, next) {
 
 /* GET users listing. */
 router.get('/register', function(req, res, next) {
-  res.render('register');
+  if(req.session){
+      res.render('index', {
+          "mem_username" : req.session.username
+      });
+  }else {
+      res.render('register', {
+          "mem_username" : '[로그인 필요]'
+      });
+  }
+
 });
 
 /* POST Member data, Register Member */
@@ -168,7 +177,9 @@ router.post('/register', function(req,res, next){
                     .then(function(rows){
                         console.log(rows);
                         // TODO : redirect 홈페이지, response 정의
-                        res.send("finish");
+                        res.redirect('index', {
+                            "mem_username" : req.session.username
+                        });
                     })
                     .catch(function(err){   // TODO: 오류 처리
                         console.log(err);
@@ -180,16 +191,19 @@ router.post('/register', function(req,res, next){
 })
 
 router.get('/login', function(req, res, next) {
-    res.render('login');
+    res.render('login', {
+        "mem_username" : req.session.username
+    });
 });
 
 router.post('/login', function(req, res, next){
     // TODO: 로그인 후 세션 생성, 로그인 후 홈페이지 작동 방식 구상(ajax? 정적 웹사이트?)
-    var id = req.body.id + "";
+    var id = req.body.userid + "";
     var password = req.body.password;
-    console.log("p? : " + password);
+    console.log("id : " + id + " " + "p? : " + password);
     mysql.query('SELECT * FROM Member WHERE mem_userid=?', id)
         .then(function(rows){
+            console.log(rows[0]);
             console.log(rows[0][0]);
             console.log("mem_p : "+rows[0][0]['mem_password']);
             hasher({password:password, salt:rows[0][0]['mem_pwsalt']}, function(err, pass, salt, hash){
@@ -206,7 +220,9 @@ router.post('/login', function(req, res, next){
                     req.session.email = rows[0][0]['mem_email'];
 
                     console.log(req.session);
-                    res.send("ok!");
+                    res.render('index', {
+                        "mem_username" : req.session.username
+                    });
                 }
                 else if(req.session.id !== undefined){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
                     res.send("not ok!");
@@ -218,7 +234,8 @@ router.post('/login', function(req, res, next){
             })
         })
         .catch(function(err){   // TODO: 오류 처리
-
+            console.log(err);
+            res.send("not not ok!");
         })
 });
 
