@@ -10,21 +10,21 @@ router.use(function(req, res, next){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  var sendData = {}
-  if(req.session.username)
-      sendData.mem_username = req.session.username;
-  else
-      sendData.mem_username = "[로그인 필요]";
-  res.render('notice', sendData);
+    var sendData = {}
+    if(req.session.username)
+        sendData.mem_username = req.session.username;
+    else
+        sendData.mem_username = "[로그인 필요]";
+    res.render('notice', sendData);
 });
 
 router.get('/stu', function(req, res, next) {
-  var sendData = {}
-  if(req.session.username)
-      sendData.mem_username = req.session.username;
-  else
-      sendData.mem_username = "[로그인 필요]";
-  res.render('stu-notice', sendData);
+    var sendData = {}
+    if(req.session.username)
+        sendData.mem_username = req.session.username;
+    else
+        sendData.mem_username = "[로그인 필요]";
+    res.render('stu-notice', sendData);
 });
 
 router.get('/stu/write', function(req, res, next) {
