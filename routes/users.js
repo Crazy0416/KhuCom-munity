@@ -137,7 +137,7 @@ router.get('/', function(req, res, next) {
 /* GET users listing. */
 router.get('/register', function(req, res, next) {
   if(req.session){
-      res.render('index', {
+      res.render('register', {
           "mem_username" : req.session.username
       });
   }else {

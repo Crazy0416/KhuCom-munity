@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
   if(req.session.nickname)
       sendData.mem_username = req.session.nickname;
   else
-      sendData.mem_username = "[로그인 필요]";
+      sendData.mem_username = null;
 
   res.render('index', sendData);
 });

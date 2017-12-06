@@ -10,11 +10,23 @@ router.use(function(req, res, next){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('board');
+  var sendData = {}
+  if(req.session.nickname)
+      sendData.mem_username = req.session.nickname;
+  else
+      sendData.mem_username = null;
+
+  res.render('board', sendData);
 });
 
 router.get('/photo', function(req, res, next) {
-  res.render('photo');
+  var sendData = {}
+  if(req.session.nickname)
+      sendData.mem_username = req.session.nickname;
+  else
+      sendData.mem_username = null;
+
+  res.render('photo', sendData);
 });
 
 

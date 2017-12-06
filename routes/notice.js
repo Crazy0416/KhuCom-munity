@@ -32,7 +32,7 @@ router.get('/stu/write', function(req, res, next) {
   if(req.session.username)
       sendData.mem_username = req.session.username;
   else
-      sendData.mem_username = "[로그인 필요]";
+      sendData.mem_username = null;
   res.render('stu-notice_write', sendData);
 });
 
