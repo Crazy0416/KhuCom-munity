@@ -148,46 +148,76 @@ router.get('/register', function(req, res, next) {
 
 });
 
+router.post('/authentication', function(req, res, next){
+    var khuis_id = req.body['khuis_id'];
+    var khuis_pw = req.body['khuis_pw'];
+    checkKhuMember(khuis_id, khuis_pw, function(json){
+        var resJson = json;
+        if(resJson.SUCCESS === 1){      // 종정시에 아이디가 있는 경우]
+            console.log('종정시 인증 id : '+ resJson['DATA']['name'] + ' 이름 : ' + resJson['DATA']['name'] + ' 소속 : ' + resJson['DATA']['company']);
+            req.session.authen = 1;             // 경희대 인증하지 않았다면 서버에서 register 불가
+            req.session.khuis_id = khuis_id;
+            req.session.name = resJson['DATA']['name'];
+            res.send(json);
+        }else{                          // 종정시에 아이디가 없는 경우
+            console.log('종정시 인증 실패 : ' + resJson['ERR_CODE']);
+            req.session.authen = 0;
+            res.send(json);
+        }
+    })
+
+})
+
 /* POST Member data, Register Member */
 router.post('/register', function(req,res, next){
-    checkKhuMember(req.body.id, req.body.khuis_password, function(json){
-        var resJson = json;
-        if(resJson.SUCCESS === 0){      // 종정시에 아이디가 없는 경우
-            res.json(resJson);
-        }
-        else{
-            /* DB에 저장할 Member의 컬럼들 */
-            var userId = resJson.DATA.id;
-            var userName = resJson.DATA.name;
-            var userNickname = req.body.nickname;
-            var userLevel;
-            var userEmail = req.body.email;
-            var registerTime = moment().format('YYYY/MM/DD HH:mm:ss');
-            if(resJson.DATA.company === '전자정보대학 컴퓨터공학과')
-                userLevel = 3;
-            else
-                userLevel = 2;
-            // Password Encrytion 패스워드 암호화, pbkdf2-password 모듈
-            hasher({password: req.body.password}, function(err, pass, salt, hash) {
+    if(req.session.authen === 1){       // 종정시 인증 했다면
+        var resJson = req.body;
+        /* DB에 저장할 Member의 컬럼들 */
+        var userId = resJson.userid;
+        var userKhuis_id = req.session.khuis_id;
+        var userPw = resJson.password;
+        var userName = req.session.name;
+        var userNickname = resJson.nickname;
+        var userLevel;
+        var userEmail = resJson.mail;
+        var userGender = (resJson.gender == "male") ? 0 : 1;
+        var registerTime = moment().format('YYYY/MM/DD HH:mm:ss');
+        if(resJson.company === '전자정보대학 컴퓨터공학과')
+            userLevel = 3;
+        else
+            userLevel = 2;
+        // Password Encrytion 패스워드 암호화, pbkdf2-password 모듈
+        hasher({password: userPw}, function(err, pass, salt, hash) {
+            mysql.query('INSERT INTO Member ' +
+                '(mem_userid, mem_password, mem_pwsalt, mem_username, mem_nickname, mem_level, mem_email, mem_register_datetime, mem_gender, mem_khuisId)' +
+                'values (?,?,?,?,?,?,?,?,?,?)',
+                [userId, hash, salt, userName, userNickname, userLevel, userEmail, registerTime, userGender, userKhuis_id])
+                .then(function(rows){
+                    console.log(rows);
+                    req.session.authen = undefined; req.session.khuis_id = undefined; req.session.name = undefined;
+                    // TODO : redirect 홈페이지, response 정의
+                    res.redirect('/');
+                })
+                .catch(function(err){   // TODO: 오류 처리
+                    console.log(err);
+                    console.log('redirect to :' + req.protocol + '://' + req.get('host') + '/index')
+                    res.send({
+                        "SUCCESS" : 0,
+                        "ERR_CODE" : 'DB 에러',
+                        'url' : req.protocol + '://' + req.get('host') + '/index'
+                    });
+                })
+        })
+    }else {
+        console.log('종정시에 인증하지 않았음');
+        console.log('redirect to :' + req.protocol + '://' + req.get('host') + '/index')
+        res.send({
+            "SUCCESS" : 0,
+            "ERR_CODE" : '종정시에 인증이 되지 않았습니다.',
+            'url' : req.protocol + '://' + req.get('host') + '/index'
+        })
+    }
 
-                mysql.query('INSERT INTO Member ' +
-                    '(mem_userid, mem_password, mem_pwsalt, mem_username, mem_nickname, mem_level, mem_email, mem_register_datetime)' +
-                    'values (?,?,?,?,?,?,?,?)',
-                    [userId, hash, salt, userName, userNickname, userLevel, userEmail, registerTime])
-                    .then(function(rows){
-                        console.log(rows);
-                        // TODO : redirect 홈페이지, response 정의
-                        res.redirect('index', {
-                            "mem_username" : req.session.username
-                        });
-                    })
-                    .catch(function(err){   // TODO: 오류 처리
-                        console.log(err);
-                        res.send("fail");
-                    })
-            })
-        }
-    });
 })
 
 router.get('/login', function(req, res, next) {

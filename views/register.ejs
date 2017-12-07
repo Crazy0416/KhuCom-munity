@@ -1,43 +1,67 @@
 
 <%- layout('base') %>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 <!-- Begin page heading -->
 <h1 class="page-heading">Register <small> 회원가입</small></h1>
 <!-- End page heading -->
 
 
+
 <div class="the-box">
   <legend>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;종합정보시스템 인증</legend>
-  <form id="KhuisForm" method="post" class="form-horizontal" action=""
-            data-bv-message="This value is not valid"
-            data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
-            data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-            data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
-
-          <div class="form-group">
+    <div class="form-horizontal" data-bv-message="This value is not valid"
+         data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+         data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+         data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+        <div class="form-group">
             <label class="col-lg-3 control-label">ID</label>
             <div class="col-lg-3">
-              <input type="text" class="form-control" name="khuis_id" required />
+                <input type="text" class="form-control" id="khuis_id" required />
             </div>
-          </div>
+        </div>
 
-          <div class="form-group">
+        <div class="form-group">
             <label class="col-lg-3 control-label">Password</label>
             <div class="col-lg-3">
-              <input type="password" class="form-control" name="khuis_pw" />
+                <input type="password" class="form-control" id="khuis_pw" />
             </div>
-          </div>
+        </div>
 
-          <div class="form-group">
+        <div class="form-group">
             <div class="col-lg-9 col-lg-offset-3">
-              <button type="submit" class="btn btn-primary">인증</button>
+                <button type="submit" id="khuisAuthen" onclick="khuisAuthening()" class="btn btn-primary">인증</button>
             </div>
-          </div>
-        </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function khuisAuthening(){
+            $.ajax({
+                url: '/users/authentication',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    'khuis_id' : $('#khuis_id').val(),
+                    'khuis_pw' : $('#khuis_pw').val()
+                },
+                success: function(result){
+                    if(result.SUCCESS == 1){            // 경희대 종정시 인증 성공
+                        alert('종정시 인증 성공!!\n나머지 정보를 입력해주세요');
+                        console.log(result['DATA']['name'])
+                        document.getElementById("username").value = result['DATA']['name'];
+                        document.getElementById("username").readOnly = true;
+                    }else{                              // 경희대 종정시 인증 실패
+                        alert('종정시 인증 실패!!');
+                        console.log("authen err : " + result['ERR_CODE']);
+                    }
+                }
+            })
+        }
+    </script>
 
   <legend>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign In</legend>
-  <form id="RegisterForm" method="post" class="form-horizontal" action=""
+  <form id="RegisterForm" class="form-horizontal" onsubmit="registering()" method="post"
             data-bv-message="This value is not valid"
             data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
             data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -60,14 +84,14 @@
           <div class="form-group">
             <label class="col-lg-3 control-label">Username</label>
             <div class="col-lg-3">
-              <input type="text" class="form-control" name="username" required />
+              <input type="text" class="form-control" id="username" name="username" required />
             </div>
           </div>
 
           <div class="form-group">
             <label class="col-lg-3 control-label">Nickname</label>
             <div class="col-lg-3">
-              <input type="text" class="form-control" name="nickname" required />
+              <input type="text" class="form-control"  name="nickname" required />
             </div>
           </div>
 
@@ -96,8 +120,25 @@
 
           <div class="form-group">
             <div class="col-lg-9 col-lg-offset-3">
-              <button type="submit" class="btn btn-primary">Sign up</button>
+              <button type="submit" id="userRegister"  class="btn btn-primary">Sign up</button>
             </div>
           </div>
         </form>
+    <script type="text/javascript">
+        function registering () {
+            $.ajax({
+                url: '/users/register',
+                dataType: 'json',
+                type: 'POST',
+
+                success: function(result){
+                    if(result['SUCCESS'] === 0){                              // 경희대 종정시 인증 실패
+                        alert(result['ERR_CODE']);
+                        console.log("authen err : " + result['ERR_CODE']);
+                    }
+                }
+            })
+        })
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </div><!-- /.the-box -->
