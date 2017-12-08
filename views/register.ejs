@@ -135,10 +135,11 @@
                     if(result['SUCCESS'] === 0){                              // 경희대 종정시 인증 실패
                         alert(result['ERR_CODE']);
                         console.log("authen err : " + result['ERR_CODE']);
+                        window.location.href = result['url'];
                     }
                 }
             })
-        })
+        }
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </div><!-- /.the-box -->

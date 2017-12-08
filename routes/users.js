@@ -19,7 +19,7 @@ mysql.configure(mysql_config);
 
 // show server time
 router.use(function(req, res, next){
-    console.log(moment().format());
+    console.log('/user : ' + moment().format());
     next();
 })
 
@@ -248,6 +248,7 @@ router.post('/login', function(req, res, next){
                     req.session.nickname = rows[0][0]['mem_nickname'];
                     req.session.level = rows[0][0]['mem_level'];
                     req.session.email = rows[0][0]['mem_email'];
+                    req.session.mem_id = rows[0][0]['mem_id'];
 
                     console.log(req.session);
                     res.render('index', {

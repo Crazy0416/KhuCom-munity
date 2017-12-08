@@ -1,6 +1,6 @@
 
 <%- layout('base') %>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <h1 class="page-heading">Notice <small>컴공 학생회 공지사항</small></h1>
 <!-- End page heading -->
 
@@ -14,8 +14,32 @@
 
 <div class="the-box">
   <h4 class="small-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;글쓰기</h4>
-  <form role="form">
-    <button type="submit" class="btn btn-default" style="float:right; width:100px;">확인</button>
-    <textarea class="summernote-lg"></textarea>
-  </form>
+  <div role="form">
+    <button type="button" onclick="stdPosting()" class="btn btn-default" style="float:right; width:100px;">확인</button>
+    <textarea class="summernote-lg" id="stuNotiPostData"></textarea>
+  </div>
+  <script type="text/javascript">
+    function stdPosting(){
+        $.ajax({
+            url: '/notice/stu/write',
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                'msg': $('.note-editable').html()
+            },
+            success: function(result){
+                if(result['SUCCESS'] === 1){
+                    alert('포스트 성공!!');
+                    console.log(result['url'])
+                    window.location.href = result['url'];
+                }else{
+                    alert('포스트 실패..!!');
+                    console.log(result['url'])
+                    window.location.href = result['url'];
+                }
+            }
+        })
+    }
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </div><!-- /.the-box -->

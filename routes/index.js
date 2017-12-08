@@ -4,7 +4,7 @@ var moment = require('moment');
 
 // show server time
 router.use(function(req, res, next){
-    console.log(moment().format());
+    console.log('/index : ' + moment().format());
     next();
 })
 
