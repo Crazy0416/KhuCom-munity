@@ -27,12 +27,22 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/stu', function(req, res, next) {
-    var sendData = {}
-    if(req.session.username)
-        sendData.mem_username = req.session.username;
-    else
-        sendData.mem_username = "[로그인 필요]";
-    res.render('stu-notice', sendData);
+    var sendData = {};
+
+    mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit  FROM Post WHERE Board_brd_id=?', 1, function (err, result, fields) {
+        if(req.session.username)
+            sendData.mem_username = req.session.username;
+        else
+            sendData.mem_username = "[로그인 필요]";
+
+        if(err){
+            res.render('stu-notice', sendData);
+        }
+        console.log("result : " + JSON.stringify(result));
+        sendData.stuNoticePost = result;
+
+        res.render('stu-notice', sendData);
+    })
 });
 
 router.get('/stu/write', function(req, res, next) {
