@@ -1,6 +1,8 @@
 
 <%- layout('base') %>
 
+<script src="https://unpkg.com/vue"></script>
+
 <style>
   th {
   text-align:center;
@@ -22,7 +24,7 @@
 <div class="the-box no-border">
 <div margin="auto">
 <h4 class="small-title">글 목록</h4>
-  <div class="table-responsive">
+  <div class="table-responsive" id="notice-table">
     <table class="table table-th-block table-hover" style="text-align:center;">
       <thead>
         <tr><th style="width: 30px;">No</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th></tr>

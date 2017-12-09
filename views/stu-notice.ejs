@@ -1,6 +1,8 @@
 
 <%- layout('base') %>
 
+<script src="https://unpkg.com/vue"></script>
+
 <style>
   th {
   text-align:center;
@@ -22,15 +24,32 @@
 <div class="the-box no-border">
 <div margin="auto">
 <h4 class="small-title">글 목록</h4>
-  <div class="table-responsive">
+  <div class="table-responsive" id="stuNotice-table">
     <table class="table table-th-block table-hover" style="text-align:center;">
       <thead>
         <tr><th style="width: 30px;">No</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th></tr>
       </thead>
       <tbody>
-        <tr><td>1</td><td>안녕하세요!</td><td>김경이</td><td>August 17, 1990</td><td>12</td></tr>
+        <tr v-for="content in contents">
+          <td>{{content.post_num}}</td>
+          <td>{{content.post_title}}</td>
+          <td>{{content.post_username}}</td>
+          <td>{{content.post_register_datetime}}</td>
+          <td>{{content.post_hit}}</td>
+        </tr>
       </tbody>
     </table>
   </div><!-- /.table-responsive -->
 </div><!-- /.the-box -->
+  <script type="text/javascript">
+    var arr = <%- JSON.stringify(stuNoticePost)%>;
+    var model = {
+        "contents": arr
+    }
+
+    var list = new Vue({
+        el : "#stuNotice-table",
+        data : model
+    })
+  </script>
 <!-- End table hover -->
