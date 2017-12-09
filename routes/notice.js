@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
     if(req.session.username)
         sendData.mem_username = req.session.username;
     else
-        sendData.mem_username = "[로그인 필요]";
+        sendData.mem_username = null;
     res.render('notice', sendData);
 });
 
@@ -33,7 +33,7 @@ router.get('/stu', function(req, res, next) {
         if(req.session.username)
             sendData.mem_username = req.session.username;
         else
-            sendData.mem_username = "[로그인 필요]";
+            sendData.mem_username = null;
 
         if(err){
             res.render('stu-notice', sendData);
@@ -47,17 +47,18 @@ router.get('/stu', function(req, res, next) {
 
 router.get('/stu/write', function(req, res, next) {
   var sendData = {}
-  if(req.session.username)
+
+  // Check login
+  if(req.session.username){
       sendData.mem_username = req.session.username;
-  else
-      sendData.mem_username = null;
-  res.render('stu-notice_write', sendData);
+      res.render('stu-notice_write', sendData);
+  }
+  else{
+      res.redirect('/notice/stu');
+  }
 });
 
 router.post('/stu/write', function(req, res, next) {
-    console.log(0);
-
-    console.log(1);
     mysql.query('SELECT brd_count FROM Board WHERE brd_id=?', 1, function (err, result, fields) {
         console.log('POST /stu/write SELECT ok : ' + JSON.stringify(result));
         var post_num = result[0]['brd_count'] + 1;

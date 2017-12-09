@@ -142,7 +142,7 @@ router.get('/register', function(req, res, next) {
       });
   }else {
       res.render('register', {
-          "mem_username" : '[로그인 필요]'
+          "mem_username" : null
       });
   }
 
@@ -251,22 +251,23 @@ router.post('/login', function(req, res, next){
                     req.session.mem_id = rows[0][0]['mem_id'];
 
                     console.log(req.session);
-                    res.render('index', {
-                        "mem_username" : req.session.username
-                    });
+                    res.redirect('/');
                 }
                 else if(req.session.id !== undefined){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
-                    res.send("not ok!");
+                    req.session.loginFail= "이미 로그인 되어 있습니다.";
+                    res.redirect('/');
                     console.log(req.session);
                 }
                 else{   // TODO: 비밀번호 틀렸을 경우 작동 방식 구상
-                    res.send("not not ok!");
+                    req.session.loginFail= "비밀번호가 틀렸습니다.";
+                    res.redirect('/');
                 }
             })
         })
         .catch(function(err){   // TODO: 오류 처리
             console.log(err);
-            res.send("not not ok!");
+            req.session.loginFail= "아이디가 없습니다.";
+            res.redirect('/');
         })
 });
 
