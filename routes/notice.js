@@ -38,6 +38,10 @@ router.get('/stu', function(req, res, next) {
         if(err){
             res.render('stu-notice', sendData);
         }
+        if(req.query.alertMessage){
+            console.log("alert!! in page : " + req.query.alertMessage);
+            sendData.alertMessage = req.query.alertMessage;
+        }
         console.log("result : " + JSON.stringify(result));
         sendData.stuNoticePost = result;
 
@@ -49,12 +53,12 @@ router.get('/stu/write', function(req, res, next) {
   var sendData = {}
 
   // Check login
-  if(req.session.username){
+  if(req.session.level === 0){
       sendData.mem_username = req.session.username;
       res.render('stu-notice_write', sendData);
   }
   else{
-      res.redirect('/notice/stu');
+      res.redirect('/notice/stu' + "/?alertMessage=" + "관리자가 아니거나 로그인이 필요합니다.");
   }
 });
 
