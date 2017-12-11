@@ -568,5 +568,14 @@
 		<!-- SHRINK NAVBAR JS -->
 		<script src="/js/shrink-main-navigation.js"></script>
 
+		<!-- 페이지 시작 시 alert 메세지 띄우는 스크립트-->
+        <% if (typeof alertMessage != 'undefined') { %>
+			<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					alert("<%=alertMessage%>");
+				});
+			</script>
+        <% } %>
 	</body>
 </html>
