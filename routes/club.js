@@ -19,6 +19,16 @@ router.get('/', function(req, res, next) {
   res.render('club', sendData);
 });
 
+router.get('/request', function(req, res, next) {
+  var sendData = {}
+  if(req.session.nickname)
+      sendData.mem_username = req.session.nickname;
+  else
+      sendData.mem_username = null;
+
+  res.render('club_request', sendData);
+});
+
 router.get('/tgwing', function(req, res, next) {
   var sendData = {}
   if(req.session.nickname)
