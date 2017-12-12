@@ -19,11 +19,25 @@ router.use(function(req, res, next){
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var sendData = {}
-    if(req.session.username)
-        sendData.mem_username = req.session.username;
+    var pageCnt;
+    if(req.query.pageCnt)
+        pageCnt= req.query.pageCnt;
     else
-        sendData.mem_username = null;
-    res.render('notice', sendData);
+        pageCnt= 1;
+    mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit ' +
+        ' FROM Post WHERE Board_brd_id=? ORDER BY post_num DESC LIMIT ?,?', [0, (pageCnt-1)*10, 10], function (err, result, fields) {
+        if(req.session.username)
+            sendData.mem_username = req.session.username;
+        else
+            sendData.mem_username = null;
+        if(err){
+            res.render('notice', sendData);
+        }
+        console.log("result : " + JSON.stringify(result));
+        sendData.stuNoticePost = result;
+
+        res.render('stu-notice', sendData);
+    })
 });
 
 router.get('/stu', function(req, res, next) {
