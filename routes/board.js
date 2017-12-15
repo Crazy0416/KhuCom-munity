@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
+var multer = require('multer');
+var path = require('path')
+var upload = multer({dest:path.join(__dirname, '../public/img/photo/large/')})
 
 // show server time
 router.use(function(req, res, next){
@@ -28,6 +31,10 @@ router.get('/photo', function(req, res, next) {
 
   res.render('photo', sendData);
 });
+
+router.post('/photo', function(req, res, next){
+
+})
 
 
 module.exports = router;

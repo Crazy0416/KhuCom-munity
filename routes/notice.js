@@ -48,7 +48,7 @@ router.get('/stu', function(req, res, next) {
     else
         pageCnt= 1;
     mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit ' +
-        ' FROM Post WHERE Board_brd_id=? ORDER BY post_num DESC LIMIT ?,?', [1, (pageCnt-1)*10, (pageCnt)*10], function (err, result, fields) {
+        ' FROM Post WHERE Board_brd_id=? ORDER BY post_num DESC LIMIT ?,?', [1, (pageCnt-1)*10, 10], function (err, result, fields) {
         if(req.session.username)
             sendData.mem_username = req.session.username;
         else
