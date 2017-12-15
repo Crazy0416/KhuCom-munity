@@ -16,6 +16,7 @@
   <li><a href="/"><i class="fa fa-home"></i></a></li>
   <li><a href="/notice">공지사항</a></li>
   <li class="active">학생회 공지사항</li>
+  <li><a href="/notice/stu/write"><i class="fa fa-pencil">&nbsp;글 작성</i></a></li>
 </ol>
 <!-- End breadcrumb -->
 
@@ -31,7 +32,7 @@
       <tbody>
         <tr v-for="content in contents">
           <td>{{content.post_num}}</td>
-          <td>{{content.post_title}}</td>
+          <td><a href="/notice/stu/detail/{{content.post_num}}">{{content.post_title}}</a></td>
           <td>{{content.post_username}}</td>
           <td>{{content.post_register_datetime}}</td>
           <td>{{content.post_hit}}</td>

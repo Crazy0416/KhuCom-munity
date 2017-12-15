@@ -9,12 +9,15 @@
   <li><a href="/"><i class="fa fa-home"></i></a></li>
   <li><a href="/notice">공지사항</a></li>
   <li class="active">학생회 공지사항</li>
+  <li class="active">글작성</li>
 </ol>
 <!-- End breadcrumb -->
 
 <div class="the-box">
-  <h4 class="small-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;글쓰기</h4>
   <div role="form">
+    <div class="form-group">
+      <input type="text" class="form-control input-lg" placeholder="글 제목">
+    </div>
     <button type="button" onclick="stdPosting()" class="btn btn-default" style="float:right; width:100px;">확인</button>
     <textarea class="summernote-lg" id="stuNotiPostData"></textarea>
   </div>

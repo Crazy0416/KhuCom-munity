@@ -68,6 +68,23 @@ router.get('/stu', function(req, res, next) {
     })
 });
 
+router.get('/stu/detail/:idx', function(req,res, next) {
+  var sendData = {}
+  if(req.session.username)
+      sendData.mem_username = req.session.username;
+  else
+      sendData.mem_username = null;
+
+  if(req.session.loginFail){
+      // TODO : 로그인 실패 시 onload 시 alert 띄우게 하기
+      req.session.loginFail = undefined;
+  }
+
+  console.log(req.body.idx);
+
+  res.render('stu-notice_detail', sendData);
+});
+
 router.get('/stu/write', function(req, res, next) {
   var sendData = {}
 
