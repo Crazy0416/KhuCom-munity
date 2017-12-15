@@ -31,7 +31,7 @@
       <tbody>
         <tr v-for="content in contents">
           <td>{{content.post_num}}</td>
-          <td>{{content.post_title}}</td>
+          <td><a href="/notice/stu/detail/{{content.post_num}}">{{content.post_title}}</a></td>
           <td>{{content.post_username}}</td>
           <td>{{content.post_register_datetime}}</td>
           <td>{{content.post_hit}}</td>
