@@ -1,6 +1,14 @@
 
 <%- layout('base') %>
 
+<script language="javascript">
+  function clubPost(clubname){
+    var theForm = document.ClubForm;
+    theForm.method = "post";
+    theForm.action = "/club/register/"+clubname;
+    theForm.submit();
+  }
+</script>
 
 <!-- Begin page heading -->
 <h1 class="page-heading">Club <small> 전체게시판</small></h1>
@@ -28,6 +36,7 @@
       </div>
       <div id="panel-collapse-4" class="collapse in" style="padding-left:20px; padding-right:20px;">
         <div class="panel-body">
+        <form name="ClubForm">
         <ul class="media-list media-sm media-team">
           <li class="media">
             <a class="pull-left" href="#fakelink">
@@ -37,7 +46,7 @@
               <table><tr>
                 <td width="170px;"><h4 class="media-heading">박주현</h4>
                   <p class="text-danger">다솜 2017 회장</td>
-                <td><button class="btn btn-success">
+                <td><button class="btn btn-success" onclick="clubPost('dasom');">
                   <i class="glyphicon glyphicon-plus"></i></button></td>
               </tr></table>
             </div>
@@ -50,7 +59,7 @@
               <table><tr>
                 <td width="170px;"><h4 class="media-heading">김현우</h4>
                   <p class="text-danger">Return 2017 회장</td>
-                <td><button class="btn btn-success">
+                <td><button class="btn btn-success" onclick="clubPost('return');">
                   <i class="glyphicon glyphicon-plus"></i></button></td>
               </tr></table>
             </div>
@@ -63,7 +72,7 @@
               <table><tr>
                 <td width="170px;"><h4 class="media-heading">안병훈</h4>
                   <p class="text-danger">T.G. Wing 2017 회장</td>
-                <td><button class="btn btn-success">
+                <td><button class="btn btn-success" onclick="clubPost('tgwing');">
                   <i class="glyphicon glyphicon-plus"></i></button></td>
               </tr></table>
             </div>
@@ -76,7 +85,7 @@
               <table><tr>
                 <td width="170px;"><h4 class="media-heading">김한주</h4>
                   <p class="text-danger">D.com 2017 회장</td>
-                <td><button class="btn btn-success">
+                <td><button class="btn btn-success" onclick="clubPost('dcom');">
                   <i class="glyphicon glyphicon-plus"></i></button></td>
               </tr></table>
             </div>
@@ -89,7 +98,7 @@
               <table><tr>
                 <td width="170px;"><h4 class="media-heading">김동현</h4>
                   <p class="text-danger">N.E.T 2017 회장</td>
-                <td><button class="btn btn-success">
+                <td><button class="btn btn-success" onclick="clubPost('net');">
                   <i class="glyphicon glyphicon-plus"></i></button></td>
               </tr></table>
             </div>
@@ -100,14 +109,15 @@
             </a>
             <div class="media-body">
               <table><tr>
-                <td width="170px;"><h4 class="media-heading">김현우</h4>
-                  <p class="text-danger">Return 2017 회장</td>
+                <td width="170px;"><h4 class="media-heading">최원섭</h4>
+                  <p class="text-danger" onclick="clubPost('hacker');">해커 2017 회장</td>
                 <td><button class="btn btn-success">
                   <i class="glyphicon glyphicon-plus"></i></button></td>
               </tr></table>
             </div>
           </li>
         </ul>
+        </form>
         </div><!-- /.panel-body -->
       </div><!-- /.collapse in -->
     </div><!-- /.panel panel-default -->
