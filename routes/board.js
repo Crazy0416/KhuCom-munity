@@ -1,9 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
-var multer = require('multer');
 var path = require('path')
-var upload = multer({dest:path.join(__dirname, '../public/img/photo/large/')})
+var mysqlConnection = require('mysql')
+    // config file
+    ,mysql_config = require('../config/db_config.json')
+    // mysql config tab
+    ,mysql = mysqlConnection.createConnection(mysql_config);
+var multer = require('multer')
+var _storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, path.join(__dirname, '../public/img/photo/large/'))
+        },
+        filename: function(req, file, cb){
+            cb(null, Date.now() + '-' + file.originalname)
+        }
+    })
+var upload = multer({storage : _storage})
+//////////////////////////////////////////
 
 // show server time
 router.use(function(req, res, next){
@@ -32,8 +46,69 @@ router.get('/photo', function(req, res, next) {
   res.render('photo', sendData);
 });
 
-router.post('/photo', function(req, res, next){
-
+// TODO : 사진 파일 하나만 왔을 때 가정.. 여러개 전달될 때 생각해야함
+router.post('/photo', upload.any(), function(req, res, next){
+    console.log("files: " + JSON.stringify(req.files))
+    console.log("body: " + JSON.stringify(req.body))
+    mysql.query('SELECT brd_count FROM Board WHERE brd_id=?', 3, function (err, result, fields) {
+        console.log('POST /stu/write SELECT ok : ' + JSON.stringify(result));
+        var post_num = result[0]['brd_count'] + 1;
+        console.log('post_num : ' + post_num);
+        var post_title = req.body.title;
+        var post_mem_id = req.session.mem_id;
+        var post_content = null;
+        var post_username = req.session.username;
+        var post_nickname = req.session.nickname;
+        var registerTime = moment().format('YYYY/MM/DD HH:mm:ss');
+        var f_originname = req.files[0].originalname;
+        var f_name = req.files[0].filename;
+        var f_size = req.files[0].size;
+        var f_type = req.files[0].mimetype;
+        var f_is_img = 1;
+        var width = 0;
+        var height = 0;
+        mysql.beginTransaction(function (err) {
+            if(err) {throw err;}
+            mysql.query('INSERT INTO Post (Board_brd_id, Member_mem_id, post_num, post_title, post_content, post_username, post_nickname, post_register_datetime, post_hit, post_comment_count, post_file, post_image, post_blame, post_del) '
+                + 'Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[3, post_mem_id, post_num, post_title, post_content, post_username, post_nickname, registerTime, 0, 0, null, null, null, null]
+                , function(err, result, fields){
+                    if (err) {
+                        return mysql.rollback(function() {
+                            throw err;
+                        });
+                    }
+                    console.log('POST /board/photo INSERT ok : ' + JSON.stringify(result));
+                    mysql.query('UPDATE Board SET brd_count=brd_count+1 WHERE brd_id=?', 1, function (err1, result1, fields1) {
+                        if (err1) {
+                            return mysql.rollback(function() {
+                                throw err1;
+                            });
+                        }
+                        console.log('POST /stu/write UPDATE ok : ' + result1 + '\n' + fields1);
+                        mysql.query('INSERT INTO Post_file (Board_brd_id, Memeber_mem_id, Post_post_id, pfi_originname, pfi_filename, pfi_filesize, pfi_type, pfi_is_img, pfi_width, pfi_height, pfi_datetime) '
+                                    + 'Values (?,?,?,?,?,?,?,?,?,?,?)'[3, post_mem_id, result1['insertId'], f_originname, f_name, f_size, f_type, f_is_img, width, height, registerTime], function(err2, result2, fields2){
+                            if (err2) {
+                                return mysql.rollback(function() {
+                                    throw err2;
+                                });
+                            }
+                            mysql.commit(function (err2) {
+                                if(err2){
+                                    return mysql.rollback(function () {
+                                        throw err2;
+                                    })
+                                }
+                                console.log('POST /stu/write TRANSACTION SUCCESS!!');
+                                res.send({
+                                    'SUCCESS' : 1,
+                                    'url' : req.protocol + '://' + req.get('host') + '/notice/stu'
+                                })
+                            })
+                        })
+                    })
+                });
+        })
+    })
 })
 
 
