@@ -26,7 +26,7 @@ router.get('/search', function(req, res, next){
     var search = req.query.search;
     var searchWord = search.split(' ');
     for(word in searchWord){
-        if(typeof searchWordCount.listObj[word] !== undefined){
+        if(typeof searchWordCount.listObj[word] !== "undefined"){
             searchWordCount.listObj[word]++;
         }
         else
