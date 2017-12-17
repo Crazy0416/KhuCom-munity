@@ -101,8 +101,12 @@ var checkKhuMember = function(r_id, r_password, callback){
                 res2.on('end',function(){
                     //console.log(output);
                     var $ = cheerio.load(output);
-                    var Mem_name = $('#GNB-student').first().text().split('님')[0].split(':')[1].substr(1);
-                    var Mem_Company = $('#GNB-student').find('p').eq(1).text().split(':')[1].substr(1);
+                    try{
+                        var Mem_name = $('#GNB-student').first().text().split('님')[0].split(':')[1].substr(1);
+                        var Mem_Company = $('#GNB-student').find('p').eq(1).text().split(':')[1].substr(1);
+                    }catch(err){
+                        console.log('ERR!!! :  ' + err);
+                    }
                     var StudentID = findStudentIdCookie(cookie);
                     if(!StudentID)
                         callback({
