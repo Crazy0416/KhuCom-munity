@@ -14,18 +14,18 @@
 
 <div class="the-box no-border blog-detail-content">
   <blockquote>
-    <h3>[글 제목]</h3>
+    <h3><%= post.post_title%></h3>
     <small>
       <table>
         <tr><td><i class="fa fa-calendar icons"></i>
-          Posted : <a href="">[날짜]</a> </td></tr>
+          Posted : <a href=""><%=post.post_register_datetime%></a> </td></tr>
         <tr><td><i class="fa fa-flask icons"></i>
-        Author: <a href="">[작성자 이름]</a></td></tr>
+        Author: <a href=""><%=post.post_username%></a></td></tr>
       </table>
     </small>
   </blockquote>
   <p class="text-justify">
-  [글 내용]
+      <%-post.post_content%>
   </p>
   <hr />
 </div><!-- /the.box .no-border -->

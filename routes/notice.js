@@ -47,7 +47,7 @@ router.get('/stu', function(req, res, next) {
         pageCnt= req.query.pageCnt;
     else
         pageCnt= 1;
-    mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit ' +
+    mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit, Board_brd_id ' +
         ' FROM Post WHERE Board_brd_id=? ORDER BY post_num DESC LIMIT ?,?', [1, (pageCnt-1)*10, 10], function (err, result, fields) {
         if(req.session.username)
             sendData.mem_username = req.session.username;
@@ -68,9 +68,10 @@ router.get('/stu', function(req, res, next) {
     })
 });
 
-router.get('/stu/detail/:idx', function(req,res, next) {
+router.get('/stu/detail/brd/:brd_id/num/:idx', function(req,res, next) {
   var sendData = {}
   var post_num = req.params.idx;
+  var brd_id = req.params.brd_id;
 
   if(req.session.username)
       sendData.mem_username = req.session.username;
@@ -82,9 +83,13 @@ router.get('/stu/detail/:idx', function(req,res, next) {
       req.session.loginFail = undefined;
   }
 
-  mysql.query('')
+  mysql.query('SELECT post_title, post_register_datetime, post_username, post_content '
+            + 'FROM Post WHERE Board_brd_id=? AND post_num=?', [brd_id, post_num], function(err, result, fields){
+      console.log("GET /stu/detail/brd/:brd_id/num/:idx SELECT : " + JSON.stringify(result));
+      sendData.post = result[0];
 
-  res.render('stu-notice_detail', sendData);
+      res.render('stu-notice_detail', sendData);
+  })
 });
 
 router.get('/stu/write', function(req, res, next) {
