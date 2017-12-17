@@ -1,6 +1,16 @@
 
 <%- layout('base') %>
 
+<script>
+  function upload_click(){
+    if ( document.getElementById("dia_upload").style.display != 'none' ) {
+      document.getElementById("dia_upload").style.display = 'none';
+    } else {
+      document.getElementById("dia_upload").style.display = '';
+	  }
+	}
+</script>
+
 <!-- Begin page heading -->
 <h1 class="page-heading">Community <small> 사진게시판</small></h1>
 <!-- End page heading -->
@@ -23,12 +33,31 @@
       </ul>
     </div><!-- /.col-sm-8 -->
     <div class="col-sm-4 text-right">
-      <button class="btn btn-warning btn-perspective"><i class="fa fa-cloud-upload"></i> Add photos</button>
+      <button class="btn btn-warning btn-perspective" onClick="upload_click();"><i class="fa fa-cloud-upload"></i> Add photos</button>
     </div><!-- /.col-sm-8 -->
   </div><!-- /.row -->
 </div><!-- /.the-box no-border -->
 
-
+<form action="/photo" method="post" enctype="multipart/form-data">
+  <div class="modal-content" id="dia_upload" style="display:none;">
+  	<div class="modal-header">
+  		<button type="button" class="close" aria-hidden="true" tabindex="-1" onClick="upload_click();">
+  			×
+  		</button>
+  		<h4>Insert Image</h4>
+  	</div>
+  	<div class="modal-body">
+  		<div class="row-fluid"><h5>Select from files</h5>
+  			<input class="note-image-input" type="file" name="image" accept="image/*">
+  		</div>
+  	</div>
+  	<div class="modal-footer">
+  		<button href="#" class="btn btn-primary note-image-btn">
+  			Insert Image
+  		</button>
+  	</div>
+  </div>
+</form>
 
 <!-- BEGIN MAGNIFIC POPUP GALLERY -->
 <div class="the-box no-border">
