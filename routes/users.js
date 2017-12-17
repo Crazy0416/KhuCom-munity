@@ -249,25 +249,21 @@ router.post('/login', function(req, res, next){
                     req.session.level = rows[0][0]['mem_level'];
                     req.session.email = rows[0][0]['mem_email'];
                     req.session.mem_id = rows[0][0]['mem_id'];
-
+                    req.session.circle = rows[0][0]['Circle_circle_id'];
                     console.log(req.session);
                     res.redirect('/');
                 }
                 else if(req.session.id !== undefined){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
-                    req.session.loginFail= "이미 로그인 되어 있습니다.";
-                    res.redirect('/');
-                    console.log(req.session);
+                    res.redirect('/?alertMessage=' + '이미 로그인 되어있습니다.');
                 }
                 else{   // TODO: 비밀번호 틀렸을 경우 작동 방식 구상
-                    req.session.loginFail= "비밀번호가 틀렸습니다.";
-                    res.redirect('/');
+                    res.redirect('/?alertMessage=' + '비밀번호가 틀렸습니다.');
                 }
             })
         })
         .catch(function(err){   // TODO: 오류 처리
             console.log(err);
-            req.session.loginFail= "아이디가 없습니다.";
-            res.redirect('/');
+            res.redirect('/?alertMessage=' + '아이디가 존재하지 않습니다.');
         })
 });
 

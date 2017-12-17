@@ -62,9 +62,9 @@ router.get('/', function(req, res, next) {
   else
       sendData.mem_username = null;
 
-  if(req.session.loginFail){
-      // TODO : 로그인 실패 시 onload 시 alert 띄우게 하기
-      req.session.loginFail = undefined;
+  if(req.query.alertMessage){
+      console.log("alert!! in page : " + req.query.alertMessage);
+      sendData.alertMessage = req.query.alertMessage;
   }
 
   res.render('index', sendData);
