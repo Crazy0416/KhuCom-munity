@@ -64,7 +64,7 @@ router.get('/', function(req, res, next) {
 
     if(req.session.level === 4){
         sendData.circleRegisterList = [];
-        mysql.query('SELECT Circle_Regi_Holder.Member_mem_id, Member.mem_username, Circle_Regi_Holder.crh_register FROM Circle_Regi_Holder INNER JOIN Member WHERE Member.mem_id=Circle_Regi_Holder.Member_mem_id AND Circle_Regi_Holder.Circle_circle_id=?', req.session.circle, function(err, result, fields){
+        mysql.query('SELECT Circle_Regi_Holder.Circle_circle_id ,Circle_Regi_Holder.Member_mem_id, Member.mem_username, Circle_Regi_Holder.crh_register FROM Circle_Regi_Holder INNER JOIN Member WHERE Member.mem_id=Circle_Regi_Holder.Member_mem_id AND Circle_Regi_Holder.Circle_circle_id=?', req.session.circle, function(err, result, fields){
             console.log('GET / SELECT : ' + JSON.stringify(result));
             sendData.circleRegisterList = result;
             if(req.query.alertMessage){

@@ -250,10 +250,10 @@
 																	<span class="small-caps"><%= crh_register%></span>
 																</div>
 																<div class="col-xs-6 text-right btn-action" id="registerBtn<%=i%>">
-																	<form action="/circle/accept/<%-circleRegisterList[i].Member_mem_id%>" method="get">
+																	<form action="/club/accept/circle/<%-circleRegisterList[i].Circle_circle_id%>/id/<%-circleRegisterList[i].Member_mem_id%>" method="get">
 																		<input type="submit" class="btn btn-success btn-xs" value="Accept">
 																	</form>
-																	<form action="/circle/ignore/<%-circleRegisterList[i].Member_mem_id%>" method="get">
+																	<form action="/club/ignore/circle/<%-circleRegisterList[i].Circle_circle_id%>/id/<%-circleRegisterList[i].Member_mem_id%>" method="get">
 																		<input type="submit" class="btn btn-danger btn-xs" value="Ignore">
 																	</form>
 																</div><!-- /.col-xs-5 text-right btn-cation -->

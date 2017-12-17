@@ -162,6 +162,7 @@ router.post('/authentication', function(req, res, next){
             req.session.authen = 1;             // 경희대 인증하지 않았다면 서버에서 register 불가
             req.session.khuis_id = khuis_id;
             req.session.name = resJson['DATA']['name'];
+            req.session.company = resJson['DATA']['company'];
             res.send(json);
         }else{                          // 종정시에 아이디가 없는 경우
             console.log('종정시 인증 실패 : ' + resJson['ERR_CODE']);
@@ -186,7 +187,8 @@ router.post('/register', function(req,res, next){
         var userEmail = resJson.mail;
         var userGender = (resJson.gender == "male") ? 0 : 1;
         var registerTime = moment().format('YYYY/MM/DD HH:mm:ss');
-        if(resJson.company === '전자정보대학 컴퓨터공학과')
+        console.log('register 회사 : ' + req.session.company)
+        if(req.session.company.indexOf('전자정보대학 컴퓨터공학과') >= 0)
             userLevel = 3;
         else
             userLevel = 2;
@@ -198,7 +200,7 @@ router.post('/register', function(req,res, next){
                 [userId, hash, salt, userName, userNickname, userLevel, userEmail, registerTime, userGender, userKhuis_id])
                 .then(function(rows){
                     console.log(rows);
-                    req.session.authen = undefined; req.session.khuis_id = undefined; req.session.name = undefined;
+                    req.session.authen = undefined; req.session.khuis_id = undefined; req.session.name = undefined; req.session.company = undefined;
                     // TODO : redirect 홈페이지, response 정의
                     res.redirect('/');
                 })
