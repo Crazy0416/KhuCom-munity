@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
         pageCnt= req.query.pageCnt;
     else
         pageCnt= 1;
-    mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit ' +
+    mysql.query('SELECT post_num, post_title, post_username, post_register_datetime, post_hit, Board_brd_id ' +
         ' FROM Post WHERE Board_brd_id=? ORDER BY post_num DESC LIMIT ?,?', [0, (pageCnt-1)*10, 10], function (err, result, fields) {
         if(req.session.username)
             sendData.mem_username = req.session.username;
@@ -70,6 +70,8 @@ router.get('/stu', function(req, res, next) {
 
 router.get('/stu/detail/:idx', function(req,res, next) {
   var sendData = {}
+  var post_num = req.params.idx;
+
   if(req.session.username)
       sendData.mem_username = req.session.username;
   else
@@ -80,7 +82,7 @@ router.get('/stu/detail/:idx', function(req,res, next) {
       req.session.loginFail = undefined;
   }
 
-  console.log(req.body.idx);
+  mysql.query('')
 
   res.render('stu-notice_detail', sendData);
 });

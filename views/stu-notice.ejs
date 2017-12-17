@@ -32,7 +32,7 @@
       <tbody>
         <tr v-for="content in contents">
           <td>{{content.post_num}}</td>
-          <td><a :href="'/notice/stu/detail/' + content.post_num">{{content.post_title}}</a></td>
+          <td><a :href="'/notice/stu/detail/brd/' + content.Board_brd_id + '/num/' + content.post_num">{{content.post_title}}</a></td>
           <td>{{content.post_username}}</td>
           <td>{{content.post_register_datetime}}</td>
           <td>{{content.post_hit}}</td>
