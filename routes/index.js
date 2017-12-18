@@ -23,6 +23,7 @@ router.get('/cloud', function(req, res, next){
  *  GET search post
  *  */
 router.get('/search', function(req, res, next){
+    var sendData = {};
     var search = req.query.search;
     var searchWord = search.split(' ');
     for(word in searchWord){

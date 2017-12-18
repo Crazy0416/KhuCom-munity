@@ -24,10 +24,22 @@
   <div class="table-responsive">
     <table class="table table-th-block table-hover" style="text-align:center;">
       <thead>
+
         <tr><th style="width: 30px;">No</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th></tr>
+
       </thead>
       <tbody>
-        <tr><td>1</td><td>[글제목]</td><td>[작성자]</td><td>[시간]</td><td>1</td></tr>
+      <% if(typeof searchPost !== 'undefined'){%>
+        <%for(var i = 0; i < searchPost.length; i++){ %>
+          <tr>
+            <td><%-searchPost[i].post_num%></td>
+            <td><%-searchPost[i].post_title%></td>
+            <td><%-searchPost[i].post_username%></td>
+            <td><%-searchPost[i].post_register_datetime%></td>
+            <td><%-searchPost[i].post_hit%></td>
+          </tr>
+        <%}%>
+      <%}%>
       </tbody>
     </table>
   </div><!-- /.table-responsive -->
