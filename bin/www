@@ -8,6 +8,11 @@ var app = require('../app');
 var debug = require('debug')('khucom-munity:server');
 var http = require('http');
 
+var reduceSearchWord = require('../modules/reduceSearchWord');
+
+// TODO : ?? ??? ??
+// reduceSearchWord.emit()
+
 /**
  * Get port from environment and store in Express.
  */
@@ -76,6 +81,8 @@ function onError(error) {
       throw error;
   }
 }
+
+
 
 /**
  * Event listener for HTTP server "listening" event.

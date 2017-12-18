@@ -1,23 +1,32 @@
-// events 모듈 사용
-var events = require('events');
 var moment = require('moment');
 var searchWordCount = require('../modules/seachWordCount');
 var fs = require('fs');
 
-// EventEmitter 객체 생성
-var eventEmitter = new events.EventEmitter();
-
 // TODO : Top k 20개 정도로 제한
-eventEmitter.on('reduceWord', function(callback){
+module.exports.reduceWord = function(callback){
     var reduceList = [];
-    var listObjCnt = searchWordCount.listObj.length;
-    var log = "";
+    var listObjCnt = Object.keys(searchWordCount.listObj).length;
+    if (listObjCnt === 0){
+        callback(reduceList);
+    }
     for(key in searchWordCount.listObj){
         var dataObj = {
             'name' : key,
             'value' : searchWordCount.listObj[key]
         }
         reduceList.push(dataObj);
+        console.log("dataobj : "+ JSON.stringify(dataObj));
+        console.log("?? : "+ Object.keys(searchWordCount.listObj)[Object.keys(searchWordCount.listObj).length - 1]);
+        if(Object.keys(searchWordCount.listObj)[Object.keys(searchWordCount.listObj).length - 1] === key) {
+            callback(reduceList);
+        }
+    }
+}
+
+module.exports.resetWord = function(callback){
+    var listObjCnt = searchWordCount.listObj.length;
+    var log = "";
+    for(key in searchWordCount.listObj){
         if(searchWordCount.listObj[listObjCnt-1] === key) {
             log += searchWordCount.listObj[key];
             searchWordCount.listObj[key] = undefined;
@@ -30,8 +39,5 @@ eventEmitter.on('reduceWord', function(callback){
         log += searchWordCount.listObj[key] + "\n";
         searchWordCount.listObj[key] = undefined;
     }
-});
+}
 
-exports.myevent = eventEmitter;
-
-exports.getListObj =  searchWordCount.listObj;

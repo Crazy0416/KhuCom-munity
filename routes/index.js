@@ -3,7 +3,7 @@ var router = express.Router();
 var moment = require('moment');
 var mysqlConnection = require('mysql');
 var searchWordCount = require('../modules/seachWordCount')
-
+var reduceSearchWord = require('../modules/reduceSearchWord');
 // config file
 var mysql_config = require('../config/db_config.json');
 // mysql config tab
@@ -27,12 +27,14 @@ router.get('/search', function(req, res, next){
     var search = req.query.search;
     var searchWord = search.split(' ');
     for(word in searchWord){
-        if(typeof searchWordCount.listObj[word] !== "undefined"){
-            searchWordCount.listObj[word]++;
+        if(typeof searchWordCount.listObj[searchWord[word]] !== "undefined"){
+            searchWordCount.listObj[searchWord[word]]++;
         }
         else
-            searchWordCount.listObj[word] = 1;
+            searchWordCount.listObj[searchWord[word]] = 1;
     }
+
+    console.log("searchWordCount : " + JSON.stringify(searchWordCount.listObj));
 
     if(req.query.pageCnt)
         pageCnt= req.query.pageCnt;
@@ -62,6 +64,7 @@ router.get('/', function(req, res, next) {
       sendData.mem_username = req.session.username;
   else
       sendData.mem_username = null;
+
   mysql.query('SELECT Post_file.pfi_filename ' +
       ' FROM Post INNER JOIN Post_file WHERE Post.Board_brd_id=? AND Post.post_id=Post_file.Post_post_id ORDER BY Post.post_num DESC LIMIT ?,?', [3, 0, 6], function (err, result, fields) {
       if(req.session.username)
@@ -86,15 +89,22 @@ router.get('/', function(req, res, next) {
                   console.log("alert!! in page : " + req.query.alertMessage);
                   sendData.alertMessage = req.query.alertMessage;
               }
-              res.render('index', sendData);
+              reduceSearchWord.reduceWord(function (list) {
+                  console.log('ReduceWord : '+ JSON.stringify(list));
+                  sendData.wordList = list;
+                  res.render('index', sendData);
+              })
           })
       }else {
           if(req.query.alertMessage){
               console.log("alert!! in page : " + req.query.alertMessage);
               sendData.alertMessage = req.query.alertMessage;
           }
-
-          res.render('index', sendData);
+          reduceSearchWord.reduceWord(function (list) {
+              console.log('ReduceWord : '+ JSON.stringify(list));
+              sendData.wordList = list;
+              res.render('index', sendData);
+          })
       }
   })
 });
