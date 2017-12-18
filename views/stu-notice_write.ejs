@@ -16,7 +16,7 @@
 <div class="the-box">
   <div role="form">
     <div class="form-group">
-      <input type="text" class="form-control input-lg" placeholder="글 제목">
+      <input type="text" id="title" class="form-control input-lg" placeholder="글 제목">
     </div>
     <button type="button" onclick="stdPosting()" class="btn btn-default" style="float:right; width:100px;">확인</button>
     <textarea class="summernote-lg" id="stuNotiPostData"></textarea>
@@ -28,6 +28,7 @@
             dataType: 'json',
             type: 'POST',
             data: {
+                'title' : $('#title').val(),
                 'msg': $('.note-editable').html()
             },
             success: function(result){

@@ -106,11 +106,12 @@ router.get('/stu/write', function(req, res, next) {
 });
 
 router.post('/stu/write', function(req, res, next) {
+    console.log("body: " + JSON.stringify(req.body));
     mysql.query('SELECT brd_count FROM Board WHERE brd_id=?', 1, function (err, result, fields) {
         console.log('POST /stu/write SELECT ok : ' + JSON.stringify(result));
         var post_num = result[0]['brd_count'] + 1;
         console.log('post_num : ' + post_num);
-        var post_title = "임의의 글" + post_num;
+        var post_title = req.body.title;
         var post_mem_id = req.session.mem_id;
         var post_content = req.body['msg'];
         var post_username = req.session.username;
