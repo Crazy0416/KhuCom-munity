@@ -142,7 +142,11 @@ router.get('/tgwing', function(req, res, next) {
   else
       sendData.mem_username = null;
 
-  res.render('tgwing', sendData);
+  if(req.session.circle === 1){
+      res.render('tgwing', sendData);
+  }else{
+      res.redirect('/club'+'/?alertMessage='+'동아리 회원이 아닙니다.')
+  }
 });
 
 router.get('/net', function(req, res, next) {
@@ -151,6 +155,12 @@ router.get('/net', function(req, res, next) {
       sendData.mem_username = req.session.username;
   else
       sendData.mem_username = null;
+
+  if(req.session.circle === 2){
+      res.render('tgwing', sendData);
+  }else{
+      res.redirect('/club'+'/?alertMessage='+'동아리 회원이 아닙니다.')
+  }
 
   res.render('net', sendData);
 });
