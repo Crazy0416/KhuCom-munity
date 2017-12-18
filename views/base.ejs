@@ -239,18 +239,28 @@
 											<div class="nav-dropdown-content static-list scroll-nav-dropdown">
 												<ul>
 													<!-- KHU : 동아리 가입 신청 들어왔을 때 -->
-													<li>
-														<img src="/img/avatar/avatar.jpg" class="absolute-left-content img-circle" alt="Avatar">
-														<div class="row">
-															<div class="col-xs-6">
-																<strong>[사용자 이름]</strong>
-																<span class="small-caps">[신청 날짜]</span>
-															</div>
-															<div class="col-xs-6 text-right btn-action">
-																<button class="btn btn-success btn-xs">Accept</button><button class="btn btn-danger btn-xs">Ignore</button>
-															</div><!-- /.col-xs-5 text-right btn-cation -->
-														</div><!-- /.row -->
-													</li>
+													<% if(typeof circleRegisterList !== 'undefined'){%>
+														<%for(var i = 0; i < circleRegisterList.length; i++) {%>
+														<% var crh_register = circleRegisterList[i].crh_register.toString().substr(0,15) -%>
+														<li>
+															<img src="/img/avatar/avatar.jpg" class="absolute-left-content img-circle" alt="Avatar">
+															<div class="row">
+																<div class="col-xs-6">
+																	<strong><%= circleRegisterList[i].mem_username%></strong>
+																	<span class="small-caps"><%= crh_register%></span>
+																</div>
+																<div class="col-xs-6 text-right btn-action" id="registerBtn<%=i%>">
+																	<form action="/circle/accept/<%-circleRegisterList[i].Member_mem_id%>" method="get">
+																		<input type="submit" class="btn btn-success btn-xs" value="Accept">
+																	</form>
+																	<form action="/circle/ignore/<%-circleRegisterList[i].Member_mem_id%>" method="get">
+																		<input type="submit" class="btn btn-danger btn-xs" value="Ignore">
+																	</form>
+																</div><!-- /.col-xs-5 text-right btn-cation -->
+															</div><!-- /.row -->
+														</li>
+														<%}%>
+													<%}%>
 													<!-- KHU END : 동아리 가입 신청 들어왔을 때 -->
 												</ul>
 											</div><!-- /.nav-dropdown-content scroll-nav-dropdown -->

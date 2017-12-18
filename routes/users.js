@@ -101,8 +101,12 @@ var checkKhuMember = function(r_id, r_password, callback){
                 res2.on('end',function(){
                     //console.log(output);
                     var $ = cheerio.load(output);
-                    var Mem_name = $('#GNB-student').first().text().split('님')[0].split(':')[1].substr(1);
-                    var Mem_Company = $('#GNB-student').find('p').eq(1).text().split(':')[1].substr(1);
+                    try{
+                        var Mem_name = $('#GNB-student').first().text().split('님')[0].split(':')[1].substr(1);
+                        var Mem_Company = $('#GNB-student').find('p').eq(1).text().split(':')[1].substr(1);
+                    }catch(err){
+                        console.log('ERR!!! :  ' + err);
+                    }
                     var StudentID = findStudentIdCookie(cookie);
                     if(!StudentID)
                         callback({
@@ -241,7 +245,7 @@ router.post('/login', function(req, res, next){
                 console.log('hash : ' + hash);
                 console.log('password: '+ pass);
                 console.log("session id : " + req.session.Id);
-                if(hash === rows[0][0]['mem_password'] && (typeof req.session.Id == "undefined")){
+                if(hash === rows[0][0]['mem_password'] && (typeof req.session.Id === "undefined")){
                     // session 설정
                     req.session.Id = id;
                     req.session.username = rows[0][0]['mem_username'];
@@ -253,11 +257,10 @@ router.post('/login', function(req, res, next){
                     console.log(req.session);
                     res.redirect('/');
                 }
-                else if(req.session.id !== undefined){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
-                    res.redirect('/?alertMessage=' + '이미 로그인 되어있습니다.');
-                }
-                else{   // TODO: 비밀번호 틀렸을 경우 작동 방식 구상
+                else if(hash !== rows[0][0]['mem_password']){    // TODO: 세션이 이미 존재하는 경우 => 로그인 되어 있는 경우
                     res.redirect('/?alertMessage=' + '비밀번호가 틀렸습니다.');
+                } else if(typeof req.session.Id !== "undefined"){   // TODO: 비밀번호 틀렸을 경우 작동 방식 구상
+                    res.redirect('/?alertMessage=' + '이미 로그인 되어있습니다.');
                 }
             })
         })

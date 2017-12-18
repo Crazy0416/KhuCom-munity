@@ -44,7 +44,8 @@ router.post('/register/:clubname', function(req, res, next){
             }else{
                 if(req.session.mem_id && req.session.level !== 2){
                     console.log('POST /register/:clubname SELECT result : ' + JSON.stringify(result))
-                    mysql.query('INSERT INTO Circle_Regi_Holder (Circle_circle_id, Member_mem_id) Values (?,?)', [result[0]['circle_id'], req.session.mem_id], function(err1, result1, fields1){
+                    var registerTime = moment().format('YYYY/MM/DD HH:mm:ss');
+                    mysql.query('INSERT INTO Circle_Regi_Holder (Circle_circle_id, Member_mem_id, crh_register) Values (?,?,?)', [result[0]['circle_id'], req.session.mem_id, registerTime], function(err1, result1, fields1){
                         if(err1){
                             console.log("POST /register/:clubname INSERT ERR : " + err1);
                             if(err1.toString().indexOf('ER_DUP_ENTRY'))
