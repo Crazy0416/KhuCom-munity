@@ -69,7 +69,9 @@
         <%for(var i = 0; i < photoList.length; i++){ %>
            <div class="col-xs-6 col-md-3">
              <a class="zooming" href="/img/photo/large/<%-photoList[i].pfi_filename%>" title="Image title here">
-             <img src="/img/photo/large/<%-photoList[i].pfi_filename%>" alt="Image" class="mfp-fade item-gallery img-responsive">
+             <img src="/img/photo/large/<%-photoList[i].pfi_filename%>" alt="Image"
+                  class="mfp-fade item-gallery img-responsive"
+                  style="width:400px; height:300px;">
              </a>
            </div><!-- /.col-xs-6 .col-md-3 -->
         <%}%>
