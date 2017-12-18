@@ -37,18 +37,30 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/photo', function(req, res, next) {
-  var sendData = {}
-  if(req.session.username)
-      sendData.mem_username = req.session.username;
+  if(req.query.pageCnt)
+      pageCnt= req.query.pageCnt;
   else
-      sendData.mem_username = null;
+      pageCnt= 1;
+  var sendData = {}
 
-  if(req.query.alertMessage){
-      console.log("alert!! in page : " + req.query.alertMessage);
-      sendData.alertMessage = req.query.alertMessage;
-  }
+  mysql.query('SELECT Post_file.pfi_filename ' +
+      ' FROM Post INNER JOIN Post_file WHERE Post.Board_brd_id=? AND Post.post_id=Post_file.Post_post_id ORDER BY Post.post_num DESC LIMIT ?,?', [3, (pageCnt-1)*10, 8], function (err, result, fields) {
+      if(req.session.username)
+          sendData.mem_username = req.session.username;
+      else
+          sendData.mem_username = null;
+      if(err){
+          res.render('photo', sendData);
+      }
+      if(req.query.alertMessage){
+          console.log("alert!! in page : " + req.query.alertMessage);
+          sendData.alertMessage = req.query.alertMessage;
+      }
+      console.log("result : " + JSON.stringify(result));
+      sendData.photoList = result;
 
-  res.render('photo', sendData);
+      res.render('photo', sendData);
+  })
 });
 
 // TODO : 사진 파일 하나만 왔을 때 가정.. 여러개 전달될 때 생각해야함
