@@ -61,26 +61,41 @@ router.get('/', function(req, res, next) {
       sendData.mem_username = req.session.username;
   else
       sendData.mem_username = null;
+  mysql.query('SELECT Post_file.pfi_filename ' +
+      ' FROM Post INNER JOIN Post_file WHERE Post.Board_brd_id=? AND Post.post_id=Post_file.Post_post_id ORDER BY Post.post_num DESC LIMIT ?,?', [3, 0, 6], function (err, result, fields) {
+      if(req.session.username)
+          sendData.mem_username = req.session.username;
+      else
+          sendData.mem_username = null;
+      if(err){
+          sendData.indexPhotoList = null;
+      }
+      if(req.query.alertMessage){
+          console.log("alert!! in page : " + req.query.alertMessage);
+          sendData.alertMessage = req.query.alertMessage;
+      }
+      console.log("result : " + JSON.stringify(result));
+      sendData.indexPhotoList = result;
+      if(req.session.level === 4){
+          sendData.circleRegisterList = [];
+          mysql.query('SELECT Circle_Regi_Holder.Circle_circle_id ,Circle_Regi_Holder.Member_mem_id, Member.mem_username, Circle_Regi_Holder.crh_register FROM Circle_Regi_Holder INNER JOIN Member WHERE Member.mem_id=Circle_Regi_Holder.Member_mem_id AND Circle_Regi_Holder.Circle_circle_id=?', req.session.circle, function(err, result, fields){
+              console.log('GET / SELECT : ' + JSON.stringify(result));
+              sendData.circleRegisterList = result;
+              if(req.query.alertMessage){
+                  console.log("alert!! in page : " + req.query.alertMessage);
+                  sendData.alertMessage = req.query.alertMessage;
+              }
+              res.render('index', sendData);
+          })
+      }else {
+          if(req.query.alertMessage){
+              console.log("alert!! in page : " + req.query.alertMessage);
+              sendData.alertMessage = req.query.alertMessage;
+          }
 
-    if(req.session.level === 4){
-        sendData.circleRegisterList = [];
-        mysql.query('SELECT Circle_Regi_Holder.Circle_circle_id ,Circle_Regi_Holder.Member_mem_id, Member.mem_username, Circle_Regi_Holder.crh_register FROM Circle_Regi_Holder INNER JOIN Member WHERE Member.mem_id=Circle_Regi_Holder.Member_mem_id AND Circle_Regi_Holder.Circle_circle_id=?', req.session.circle, function(err, result, fields){
-            console.log('GET / SELECT : ' + JSON.stringify(result));
-            sendData.circleRegisterList = result;
-            if(req.query.alertMessage){
-                console.log("alert!! in page : " + req.query.alertMessage);
-                sendData.alertMessage = req.query.alertMessage;
-            }
-            res.render('index', sendData);
-        })
-    }else {
-        if(req.query.alertMessage){
-            console.log("alert!! in page : " + req.query.alertMessage);
-            sendData.alertMessage = req.query.alertMessage;
-        }
-
-        res.render('index', sendData);
-    }
+          res.render('index', sendData);
+      }
+  })
 });
 
 router.get('/base', function(req, res, next) {
